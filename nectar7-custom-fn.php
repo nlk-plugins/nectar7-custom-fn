@@ -163,10 +163,10 @@ add_action('template_redirect', 'nectar7_custom_fn_emptycart_redirect');
 function nectar7_custom_fn_emptycart_redirect(){
   global $woocommerce;
 
-  $cartContent = sizeof( $woocommerce->cart->get_cart() );
 
-  if( is_checkout() && ( ! is_wc_endpoint_url( 'order-received' ) )&& ( $cartContent == 0 ) ) {
-    $redir = true;
+  if( ( is_cart() || is_checkout() ) && ( ! is_wc_endpoint_url( 'order-received' ) ) ) {
+    $cartContent = sizeof( $woocommerce->cart->get_cart() );
+    $redir = ( $cartContent == 0 );
     if ( function_exists('is_wcopc_checkout') ) {
       // don't trigger this empty card redirect on one page checkout which is a checkout but hey
       if ( is_wcopc_checkout() ) {
@@ -174,8 +174,7 @@ function nectar7_custom_fn_emptycart_redirect(){
       }
     }
     if ( $redir ) {
-      $shop_page_url = get_permalink( woocommerce_get_page_id( 'shop' ) );
-      wp_redirect( $shop_page_url );
+      wp_redirect( 'products' );
       exit;
     }
   }
