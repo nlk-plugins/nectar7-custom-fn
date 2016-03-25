@@ -366,3 +366,15 @@ if ( $pcount++ > 0 ) echo ',';
 </script>
 <?php
 }
+
+// look for a query param ?exclusive=1 & empty cart if yes
+function nectar7_custom_fn_emptycart_action() {
+  if ( isset( $_REQUEST['exclusive'] ) ) {
+    if ( $_REQUEST['exclusive'] == 1 ) {
+      // empty the cart?
+      wc_empty_cart();
+    }
+  }
+}
+// set priority 18 so it fires before the add-to-cart happens which is 20
+add_action( 'wp_loaded', 'nectar7_custom_fn_emptycart_action', 18 );
